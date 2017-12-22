@@ -6,9 +6,9 @@ import (
 	"github.com/astaxie/beego"
 	"fmt"
 	"errors"
+	"jxdream/models/user"
+	"time"
 )
-
-var o orm.Ormer //全局orm
 
 func init() {
 	conString,err := getDBConf()
@@ -16,14 +16,16 @@ func init() {
 		panic(err)
 	}
 	orm.RegisterDataBase("default", "mysql", conString, 30)
-	orm.RegisterModelWithPrefix("j_", new(User))
+
+	// 设置为 UTC 时间
+	orm.DefaultTimeLoc = time.UTC
+
+	orm.RegisterModelWithPrefix("jx_", new(user.User))
 	orm.RunSyncdb("default", false, true)
 
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
 	}
-
-	o = orm.NewOrm() //初始化
 }
 
 func getDBConf() (str string, err error) {
