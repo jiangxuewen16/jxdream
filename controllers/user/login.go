@@ -37,7 +37,10 @@ func (this *LoginController) LoginIn() {
 		this.AjaxReturn("登陆失败", controllers.ERROR_CODE, nil, nil)
 	}
 
-	tokenString,err := libs.BuildJWT(user.Id, user.Username, user.Nickname, user.Avatar)
+	/*生成JWT*/
+	JWTClaims :=libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
+	jwtClaims := libs.JWTToken{JWTClaims:JWTClaims}
+	tokenString, err := jwtClaims.BuildJWT()
 	log.Println(tokenString)
 
 	if err != nil {
@@ -49,7 +52,6 @@ func (this *LoginController) LoginIn() {
 }
 
 // @router /session/destroy   [get]
-func (this *LoginController) Logout()  {
+func (this *LoginController) Logout() {
 	this.DestroySession()
 }
-

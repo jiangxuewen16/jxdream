@@ -13,7 +13,7 @@ var HasPermission = func(ctx *context.Context) {
 
 /*验证登陆*/
 var HasLogin = func(ctx *context.Context) {
-	log.Println("sessionID :",ctx.Input.CruSession.SessionID())
+	log.Println("JWT token:",string(ctx.Request.Header.Get("Authorization")))
 	_, ok := ctx.Input.Session("isLogin").(bool)
 	log.Println("requset uri :",ctx.Request.RequestURI)
 	log.Println("whether login :",ok)
