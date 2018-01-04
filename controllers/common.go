@@ -44,6 +44,7 @@ func (this *BaseController) Prepare() {
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.BaseUrl = this.Ctx.Request.URL.String()
 
+	//TODO:这里需要改进，不需要session
 	this.IsLogin,_ = this.GetSession("isLogin").(bool)
 	this.UserId,_ = this.GetSession("userId").(int)
 	this.UserName,_ = this.GetSession("userName").(string)

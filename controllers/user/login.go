@@ -39,8 +39,7 @@ func (this *LoginController) LoginIn() {
 
 	/*生成JWT*/
 	JWTClaims :=libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
-	jwtClaims := libs.JWTToken{JWTClaims:JWTClaims}
-	tokenString, err := jwtClaims.BuildJWT()
+	tokenString, err := libs.BuildJWT(JWTClaims)
 	log.Println(tokenString)
 
 	if err != nil {
