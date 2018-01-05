@@ -52,7 +52,7 @@ func buildClaims(jwtClaims JWTClaims) jwt.MapClaims {
 }
 
 //验证jwt token
-func (this *JWTClaims) ValidJWT(token string) (*jwt.Token, error) {
+func ValidJWT(token string) (*jwt.Token, error) {
 	t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})

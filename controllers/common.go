@@ -85,9 +85,7 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 	switch strings.Split(requestType,";")[0] {
 	case RJSON:
 		err = json.Unmarshal(this.Ctx.Input.RequestBody, struc)
-	case RFORM:
-		err = this.ParseForm(struc)
-	case RXML:
+	case RFORM,RXML:
 		err = this.ParseForm(struc)
 	default:
 		//TODO:
