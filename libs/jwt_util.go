@@ -61,3 +61,14 @@ func ValidJWT(token string) (*jwt.Token, error) {
 
 	return t, nil
 }
+
+func GetClaims(token string) (map[string]interface{}, error) {
+	t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
+		return SecretKey, nil
+	})
+
+	CheckError(err)
+	mapClaims := t.Claims.(jwt.MapClaims)
+
+	return mapClaims,nil
+}

@@ -8,7 +8,7 @@ import (
 )
 
 type Header struct {
-	JWT string
+	JWT         string
 	RequestTime int64
 }
 
@@ -18,22 +18,25 @@ type Data struct {
 
 type RequestParam struct {
 	Header *Header
-	Data *Data
+	Data   *Data
 }
 
 type ResponseParam struct {
 	Header *Header
-	Data *Data
+	Data   *Data
 }
 
-func (this * RequestParam) BuildRespose(resquest string) string {
+func (this *RequestParam) BuildRespose(data interface{}) (string, error) {
+
+
+
 	requestParam := new(RequestParam)
 	err := json.Unmarshal([]byte(resquest), requestParam)
 	if err != nil {
-
+		return "",err
 	}
 
-	requestParam.Header.JWT
+	requestParam.Header.JWT =
 
 	jwtClaims := libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
 
@@ -45,19 +48,18 @@ func (this * RequestParam) BuildRespose(resquest string) string {
 	this.Header.JWT =
 }
 
-func (this * RequestParam) LoginBuildRespose(jwtClaims libs.JWTClaims, data interface{}) string {
+func (this *RequestParam) LoginBuildRespose(jwtClaims libs.JWTClaims, data interface{}) string {
 	/*生成JWT*/
-	tokenString, err := jwtClaims.BuildJWT()
+	tokenString, err := libs.BuildJWT()
 	if err != nil {
 
 	}
-
 
 	this.Header.JWT = tokenString
 	this.Header.RequestTime = time.Now().Unix()
 	this.Data.Data = data
 
-	jsonData,err := json.Marshal(this)
+	jsonData, err := json.Marshal(this)
 	if err != nil {
 
 	}

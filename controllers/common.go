@@ -8,6 +8,8 @@ import (
 	"errors"
 	"log"
 	"jxdream/models/user"
+	"jxdream/common"
+	"jxdream/libs"
 )
 
 const (
@@ -35,6 +37,7 @@ type BaseController struct {
 	Avatar         string
 	UserName       string
 	BaseUrl        string
+	jwtClaims      libs.JWTClaims		//todo:这个地方需要设置值
 }
 
 func (this *BaseController) Prepare() {
@@ -44,12 +47,20 @@ func (this *BaseController) Prepare() {
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.BaseUrl = this.Ctx.Request.URL.String()
 
-	//TODO:这里需要改进，不需要session
-	this.IsLogin,_ = this.GetSession("isLogin").(bool)
-	this.UserId,_ = this.GetSession("userId").(int)
-	this.UserName,_ = this.GetSession("userName").(string)
-	this.NickName,_ = this.GetSession("nickName").(string)
-	this.Avatar,_ = this.GetSession("avatar").(string)
+	requesrParam := &common.RequestParam{}
+	this.SetParamDate(requesrParam)
+
+	jwtToken := requesrParam.Header.JWT
+	mapClaims, err := libs.GetClaims(jwtToken)
+	if err != nil {
+		log.Println("get json web token parameter error:", err)
+		this.StopRun()
+	}
+
+	this.UserId, _ = mapClaims["userId"].(int)
+	this.UserName, _ = mapClaims["userName"].(string)
+	this.NickName, _ = mapClaims["nickName"].(string)
+	this.Avatar, _ = mapClaims["avatar"].(string)
 
 }
 
@@ -82,10 +93,10 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 
 	var err error
 
-	switch strings.Split(requestType,";")[0] {
+	switch strings.Split(requestType, ";")[0] {
 	case RJSON:
 		err = json.Unmarshal(this.Ctx.Input.RequestBody, struc)
-	case RFORM,RXML:
+	case RFORM, RXML:
 		err = this.ParseForm(struc)
 	default:
 		//TODO:
@@ -107,3 +118,9 @@ func (this *BaseController) AjaxReturn(msg interface{}, code int, data interface
 	this.ServeJSON()
 	this.StopRun()
 }
+
+//错误panic
+//todo:抛错，应该在一个错误页面
+/*func (this *BaseController) ()  {
+
+}*/
