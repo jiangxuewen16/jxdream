@@ -3,29 +3,29 @@ package common
 import (
 	"jxdream/libs"
 	"time"
-	"encoding/json"
 )
 
 type Header struct {
-	JWT  string `json:"jwt"`
-	Time int64  `json:"time"`
-	Code int    `json:"code"`
+	JWT     string `json:"jwt"`
+	Time    int64  `json:"time"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 type RequestParam struct {
-	Header *Header `json:"header"`
-	Data   interface{}   `json:"data"`
+	Header *Header     `json:"header"`
+	Data   interface{} `json:"data"`
 }
 
 type ResponseParam struct {
-	Header *Header `json:"header"`
-	Data   interface{}    `json:"data"`
+	Header *Header     `json:"header"`
+	Data   interface{} `json:"data"`
 }
 
 //构建返回数据
-func BuildRespose(jwtClaims libs.JWTClaims,data interface{}, code int) (RequestParam, error) {
+func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (RequestParam, error) {
 	requestParam := RequestParam{}
-	header,err := buildHeader(jwtClaims, code)
+	header, err := buildHeader(jwtClaims, message, code)
 
 	if err != nil {
 		return requestParam, nil
@@ -34,17 +34,17 @@ func BuildRespose(jwtClaims libs.JWTClaims,data interface{}, code int) (RequestP
 	requestParam.Header = &header
 	requestParam.Data = data
 
-	return requestParam,nil
+	return requestParam, nil
 }
 
 //构建header
-func buildHeader(jwtClaims libs.JWTClaims, code int) (Header,error) {
-	tokenString,err := libs.BuildJWT(jwtClaims)
+func buildHeader(jwtClaims libs.JWTClaims, message string, code int) (Header, error) {
+	tokenString, err := libs.BuildJWT(jwtClaims)
 
 	if err != nil {
-		return Header{},err
+		return Header{}, err
 	}
 
-	header := Header{tokenString, time.Now().Unix(), code}
-	return header,nil
+	header := Header{tokenString, time.Now().Unix(), message, code}
+	return header, nil
 }

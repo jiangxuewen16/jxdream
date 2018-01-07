@@ -11,30 +11,22 @@ type LoginController struct {
 	controllers.BaseController
 }
 
-const (
-	SecretKey = "welcome to wangshubo's blog"
-)
-
-type Token struct {
-	Token string `json:"token"`
-}
-
 // @router /session/create [post]
 func (this *LoginController) LoginIn() {
 	user := user.User{}
 	if err := this.SetParamDate(&user); err != nil {
-		this.AjaxReturn("参数有误", controllers.ERROR_CODE, err, nil)
+		this.FailureResponser("参数有误", controllers.ERROR_CODE, nil)
 	}
 
 	/*数据验证*/
 	errList := user.ParamValid()
 	if errList != nil {
-		this.AjaxReturn("参数有误", controllers.ERROR_CODE, errList, nil)
+		this.FailureResponser("参数有误", controllers.ERROR_CODE, errList)
 	}
 
 	isFind := user.FindByUNameAndPwd()
-	if ( ! isFind) {
-		this.AjaxReturn("登陆失败", controllers.ERROR_CODE, nil, nil)
+	if (!isFind) {
+		this.FailureResponser("登陆失败", controllers.ERROR_CODE, nil)
 	}
 
 	/*生成JWT*/
@@ -43,11 +35,11 @@ func (this *LoginController) LoginIn() {
 	log.Println(tokenString)
 
 	if err != nil {
-		this.AjaxReturn("登陆失败", controllers.ERROR_CODE, nil, nil)
+		this.FailureResponser("登陆失败", controllers.ERROR_CODE, nil)
 		return
 	}
 
-	this.AjaxReturn("登陆成功", controllers.SUCCESS_CODE, nil, tokenString)
+	this.SuccessResponser("登陆成功", nil)
 }
 
 // @router /session/destroy   [get]

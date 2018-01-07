@@ -37,7 +37,7 @@ type BaseController struct {
 	Avatar         string
 	UserName       string
 	BaseUrl        string
-	jwtClaims      libs.JWTClaims		//todo:这个地方需要设置值
+	jwtClaims      libs.JWTClaims //todo:这个地方需要设置值
 }
 
 func (this *BaseController) Prepare() {
@@ -57,7 +57,7 @@ func (this *BaseController) Prepare() {
 		this.StopRun()
 	}
 
-	this.jwtClaims = mapClaims  //todo:??????
+	this.jwtClaims = mapClaims //todo:??????
 
 	this.UserId, _ = mapClaims["userId"].(int)
 	this.UserName, _ = mapClaims["userName"].(string)
@@ -108,9 +108,9 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 }
 
 //返回数据
-func (this *BaseController) Responser(data interface{}) {
+func (this *BaseController) Responser(data interface{}, message string, code int) {
 	jwtClaims := this.jwtClaims
-	response,err := common.BuildRespose(jwtClaims, data, 200)
+	response, err := common.BuildRespose(jwtClaims, data, message, code)
 	if err != nil {
 		log.Println("Responser error:", err)
 		this.StopRun()
@@ -119,6 +119,14 @@ func (this *BaseController) Responser(data interface{}) {
 	this.Data["json"] = response
 	this.ServeJSON()
 	this.StopRun()
+}
+
+func (this *BaseController) SuccessResponser(message string, data interface{}) {
+	this.Responser(data, message, 200)
+}
+
+func (this *BaseController) FailureResponser(message string, code int, data interface{}) {
+	this.Responser(data, message, code)
 }
 
 //获取请求data参数
