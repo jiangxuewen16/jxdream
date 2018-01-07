@@ -37,7 +37,7 @@ type BaseController struct {
 	Avatar         string
 	UserName       string
 	BaseUrl        string
-	jwtClaims      *libs.JWTClaims		//todo:这个地方需要设置值
+	jwtClaims      libs.JWTClaims		//todo:这个地方需要设置值
 }
 
 func (this *BaseController) Prepare() {
@@ -57,7 +57,7 @@ func (this *BaseController) Prepare() {
 		this.StopRun()
 	}
 
-	this.jwtClaims = mapClaims
+	this.jwtClaims = mapClaims  //todo:??????
 
 	this.UserId, _ = mapClaims["userId"].(int)
 	this.UserName, _ = mapClaims["userName"].(string)
@@ -107,25 +107,14 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 	return err
 }
 
-/**
- * 接口返回
- */
-func (this *BaseController) AjaxReturn(msg interface{}, code int, data interface{}, JWT interface{}) {
-	out := make(map[string]interface{})
-	out["code"] = code
-	out["msg"] = msg
-	out["data"] = data
-	out["JWT"] = JWT
-	this.Data["json"] = out
-	this.ServeJSON()
-	this.StopRun()
-}
-
 //返回数据
 func (this *BaseController) Responser(data interface{}) {
 	jwtClaims := this.jwtClaims
-
 	response,err := common.BuildRespose(jwtClaims, data, 200)
+	if err != nil {
+		log.Println("Responser error:", err)
+		this.StopRun()
+	}
 
 	this.Data["json"] = response
 	this.ServeJSON()
