@@ -2,67 +2,49 @@ package common
 
 import (
 	"jxdream/libs"
-	"jxdream/models/user"
 	"time"
 	"encoding/json"
 )
 
 type Header struct {
-	JWT         string
-	RequestTime int64
-}
-
-type Data struct {
-	Data interface{}
+	JWT  string `json:"jwt"`
+	Time int64  `json:"time"`
+	Code int    `json:"code"`
 }
 
 type RequestParam struct {
-	Header *Header
-	Data   *Data
+	Header *Header `json:"header"`
+	Data   interface{}   `json:"data"`
 }
 
 type ResponseParam struct {
-	Header *Header
-	Data   *Data
+	Header *Header `json:"header"`
+	Data   interface{}    `json:"data"`
 }
 
-func (this *RequestParam) BuildRespose(data interface{}) (string, error) {
+//构建返回数据
+func BuildRespose(jwtClaims libs.JWTClaims,data interface{}, code int) (RequestParam, error) {
+	requestParam := RequestParam{}
+	header,err := buildHeader(jwtClaims, code)
 
-
-
-	requestParam := new(RequestParam)
-	err := json.Unmarshal([]byte(resquest), requestParam)
 	if err != nil {
-		return "",err
+		return requestParam, nil
 	}
 
-	requestParam.Header.JWT =
+	requestParam.Header = &header
+	requestParam.Data = data
 
-	jwtClaims := libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
-
-	this.LoginBuildRespose();
-
-	/*生成JWT*/
-	jwtClaims := libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
-	tokenString, err := jwtClaims.BuildJWT()
-	this.Header.JWT =
+	return requestParam,nil
 }
 
-func (this *RequestParam) LoginBuildRespose(jwtClaims libs.JWTClaims, data interface{}) string {
-	/*生成JWT*/
-	tokenString, err := libs.BuildJWT()
-	if err != nil {
+//构建header
+func buildHeader(jwtClaims libs.JWTClaims, code int) (Header,error) {
+	tokenString,err := libs.BuildJWT(jwtClaims)
 
+	if err != nil {
+		return Header{},err
 	}
 
-	this.Header.JWT = tokenString
-	this.Header.RequestTime = time.Now().Unix()
-	this.Data.Data = data
-
-	jsonData, err := json.Marshal(this)
-	if err != nil {
-
-	}
-
-	return string(jsonData)
+	header := Header{tokenString, time.Now().Unix(), code}
+	return header,nil
 }

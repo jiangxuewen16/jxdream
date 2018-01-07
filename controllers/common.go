@@ -37,7 +37,7 @@ type BaseController struct {
 	Avatar         string
 	UserName       string
 	BaseUrl        string
-	jwtClaims      libs.JWTClaims		//todo:这个地方需要设置值
+	jwtClaims      *libs.JWTClaims		//todo:这个地方需要设置值
 }
 
 func (this *BaseController) Prepare() {
@@ -53,9 +53,11 @@ func (this *BaseController) Prepare() {
 	jwtToken := requesrParam.Header.JWT
 	mapClaims, err := libs.GetClaims(jwtToken)
 	if err != nil {
-		log.Println("get json web token parameter error:", err)
+		log.Println("error:", err)
 		this.StopRun()
 	}
+
+	this.jwtClaims = mapClaims
 
 	this.UserId, _ = mapClaims["userId"].(int)
 	this.UserName, _ = mapClaims["userName"].(string)
@@ -119,8 +121,28 @@ func (this *BaseController) AjaxReturn(msg interface{}, code int, data interface
 	this.StopRun()
 }
 
+//返回数据
+func (this *BaseController) Responser(data interface{}) {
+	jwtClaims := this.jwtClaims
+
+	response,err := common.BuildRespose(jwtClaims, data, 200)
+
+	this.Data["json"] = response
+	this.ServeJSON()
+	this.StopRun()
+}
+
+//获取请求data参数
+func (this *BaseController) GetRequstData() interface{} {
+	requestParam := &common.RequestParam{}
+	this.SetParamDate(requestParam)
+	return requestParam.Data
+}
+
 //错误panic
 //todo:抛错，应该在一个错误页面
-/*func (this *BaseController) ()  {
+/*
+func (this *BaseController) ()  {
 
-}*/
+}
+*/
