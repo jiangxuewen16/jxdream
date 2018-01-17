@@ -2,28 +2,12 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"strings"
-	"net/http"
-	"encoding/json"
-	"errors"
-	"log"
-	"jxdream/models/user"
 	"jxdream/common"
 	"jxdream/libs"
-)
-
-const (
-	RJSON      = "application/json"
-	RXML       = "application/xml"
-	RPLAIN     = "text/plain"
-	RHTML      = "text/html"
-	RFILE_FORM = "multipart/form-data"
-	RFORM      = "application/x-www-form-urlencoded"
-)
-
-const (
-	ERROR_CODE   = 0
-	SUCCESS_CODE = 1
+	"jxdream/models/user"
+	"log"
+	"net/http"
+	"strings"
 )
 
 type BaseController struct {
@@ -42,7 +26,7 @@ type BaseController struct {
 
 func (this *BaseController) Prepare() {
 	controllerName, actionName := this.GetControllerAndAction()
-	this.ControllerName = strings.ToLower(controllerName[0: len(controllerName)-10])
+	this.ControllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
 	this.ActionName = strings.ToLower(actionName)
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.BaseUrl = this.Ctx.Request.URL.String()
@@ -57,12 +41,12 @@ func (this *BaseController) Prepare() {
 		this.StopRun()
 	}
 
-	this.jwtClaims = mapClaims //todo:??????
-
 	this.UserId, _ = mapClaims["userId"].(int)
 	this.UserName, _ = mapClaims["userName"].(string)
 	this.NickName, _ = mapClaims["nickName"].(string)
 	this.Avatar, _ = mapClaims["avatar"].(string)
+
+	this.jwtClaims = libs.JWTClaims{this.UserId, this.UserName, this.NickName, this.Avatar}
 
 }
 
@@ -88,23 +72,8 @@ func (this *BaseController) GetContentType() string {
 
 /*绑定请求参数到结构体*/
 func (this *BaseController) SetParamDate(struc interface{}) error {
-	requestType := strings.ToLower(this.GetContentType())
-	strings.ToLower(this.GetContentType())
-	log.Println("requst type :", requestType)
-	log.Println("requst params", string(this.Ctx.Input.RequestBody))
-
-	var err error
-
-	switch strings.Split(requestType, ";")[0] {
-	case RJSON:
-		err = json.Unmarshal(this.Ctx.Input.RequestBody, struc)
-	case RFORM, RXML:
-		err = this.ParseForm(struc)
-	default:
-		//TODO:
-		err = errors.New("请求类型：" + requestType + "无法解析")
-	}
-	return err
+	common.SetParamDate(this.Ctx, struc)
+	this.ParseForm(struc)
 }
 
 //返回数据

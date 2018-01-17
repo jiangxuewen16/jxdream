@@ -3,6 +3,20 @@ package common
 import (
 	"jxdream/libs"
 	"time"
+	"strings"
+	"encoding/json"
+	"errors"
+	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego"
+)
+
+const (
+	RJSON      = "application/json"
+	RXML       = "application/xml"
+	RPLAIN     = "text/plain"
+	RHTML      = "text/html"
+	RFILE_FORM = "multipart/form-data"
+	RFORM      = "application/x-www-form-urlencoded"
 )
 
 type Header struct {
@@ -45,6 +59,24 @@ func buildHeader(jwtClaims libs.JWTClaims, message string, code int) (Header, er
 		return Header{}, err
 	}
 
-	header := Header{tokenString, time.Now().Unix(), message, code}
+	header := Header{tokenString, time.Now().Unix(), code, message}
 	return header, nil
+}
+
+func SetParamDate(ctx *context.Context, struc interface{}) error {
+	ctx.Request.Header.Get("Content-Type")
+	requestType := strings.ToLower(ctx.Request.Header.Get("Content-Type"))
+
+	var err error
+
+	switch strings.Split(requestType, ";")[0] {
+	case RJSON:
+		err = json.Unmarshal(ctx.Input.RequestBody, struc)
+	case RFORM, RXML:
+		//err = beego.ParseForm(struc)  todo:what?????
+	default:
+		//TODO:
+		err = errors.New("请求类型：" + requestType + "无法解析")
+	}
+	return err
 }

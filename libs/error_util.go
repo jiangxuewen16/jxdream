@@ -1,8 +1,8 @@
 package libs
 
 import (
-	"log"
 	"errors"
+	"log"
 )
 
 var (

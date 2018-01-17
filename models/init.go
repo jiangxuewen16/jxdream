@@ -1,17 +1,17 @@
 package models
 
 import (
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego"
-	"fmt"
 	"errors"
+	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	_ "github.com/go-sql-driver/mysql"
 	"jxdream/models/user"
 	"time"
 )
 
 func init() {
-	conString,err := getDBConf()
+	conString, err := getDBConf()
 	if err != nil {
 		panic(err)
 	}
@@ -57,6 +57,6 @@ func getDBConf() (str string, err error) {
 	str = beego.AppConfig.String("mysqluser") + ":" + beego.AppConfig.String("mysqlpass") + "@(" +
 		beego.AppConfig.String("mysqladdr") + ":" + beego.AppConfig.String("mysqlport") + ")/" +
 		beego.AppConfig.String("mysqldb") + "?charset=utf8&parseTime=true&charset=utf8&loc=Asia%2FShanghai"
-	fmt.Println("connect sql: ",str)
+	fmt.Println("connect sql: ", str)
 	return
 }

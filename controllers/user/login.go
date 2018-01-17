@@ -1,10 +1,10 @@
 package user
 
 import (
-	"jxdream/models/user"
 	"jxdream/controllers"
-	"log"
 	"jxdream/libs"
+	"jxdream/models/user"
+	"log"
 )
 
 type LoginController struct {
@@ -25,12 +25,12 @@ func (this *LoginController) LoginIn() {
 	}
 
 	isFind := user.FindByUNameAndPwd()
-	if (!isFind) {
+	if !isFind {
 		this.FailureResponser("登陆失败", controllers.ERROR_CODE, nil)
 	}
 
 	/*生成JWT*/
-	JWTClaims :=libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
+	JWTClaims := libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar}
 	tokenString, err := libs.BuildJWT(JWTClaims)
 	log.Println(tokenString)
 

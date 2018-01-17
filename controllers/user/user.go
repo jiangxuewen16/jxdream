@@ -10,7 +10,7 @@ type UserController struct {
 }
 
 // @router /index [get]
-func (this *UserController) Index()  {
-	log.Println("whether login :",this.IsLogin,";","userId :",this.UserId,";","userName :",this.UserName)
-	
+func (this *UserController) Index() {
+	log.Println("whether login :", this.IsLogin, ";", "userId :", this.UserId, ";", "userName :", this.UserName)
+
 }

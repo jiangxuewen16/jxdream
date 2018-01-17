@@ -1,10 +1,10 @@
 package user
 
 import (
-	"github.com/astaxie/beego/validation"
 	"fmt"
-	"jxdream/libs"
 	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/validation"
+	"jxdream/libs"
 )
 
 type User struct {
@@ -13,7 +13,7 @@ type User struct {
 	Password   string `orm:"type(char);size(32)" form:"password" valid:"MinSize(6);MaxSize(16)"`
 	Mobile     string `orm:"type(varchar);size(15)" form:"mobile"`
 	Nickname   string `orm:"type(varchar);size(50)" form:"nickname"`
-	Avatar string `orm:"type(varchar);size(50)" form:"avatar"`
+	Avatar     string `orm:"type(varchar);size(50)" form:"avatar"`
 	UserType   int    `orm:"type(tinyint)" form:"-"`
 	State      int    `orm:"type(tinyint);size(1);default(1)" form:"-"`
 	IsDelete   int    `orm:"type(tinyint);size(1);default(0)" form:"-"`

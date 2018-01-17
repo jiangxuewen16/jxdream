@@ -1,10 +1,10 @@
 package libs
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	"time"
-	"log"
 	"github.com/astaxie/beego"
+	"github.com/dgrijalva/jwt-go"
+	"log"
+	"time"
 )
 
 type JWTClaims struct {
@@ -70,5 +70,5 @@ func GetClaims(token string) (map[string]interface{}, error) {
 	CheckError(err)
 	mapClaims := t.Claims.(jwt.MapClaims)
 
-	return mapClaims,nil
+	return mapClaims, nil
 }

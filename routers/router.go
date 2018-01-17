@@ -11,9 +11,9 @@ import (
 	"jxdream/controllers"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
 	"jxdream/controllers/user"
 	"jxdream/filters"
-	"github.com/astaxie/beego/plugins/cors"
 )
 
 func init() {
@@ -40,5 +40,5 @@ func init() {
 		AllowCredentials: true,
 	}))
 
-	beego.InsertFilter("/*",beego.BeforeRouter,filters.HasLogin)
+	beego.InsertFilter("/*", beego.BeforeRouter, filters.HasLogin)
 }
