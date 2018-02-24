@@ -74,6 +74,7 @@ func (this *BaseController) GetContentType() string {
 func (this *BaseController) SetParamDate(struc interface{}) error {
 	common.SetParamDate(this.Ctx, struc)
 	this.ParseForm(struc)
+	return nil
 }
 
 //返回数据

@@ -5,6 +5,7 @@ import (
 	"jxdream/libs"
 	"jxdream/models/user"
 	"log"
+	"jxdream/common"
 )
 
 type LoginController struct {
@@ -15,18 +16,18 @@ type LoginController struct {
 func (this *LoginController) LoginIn() {
 	user := user.User{}
 	if err := this.SetParamDate(&user); err != nil {
-		this.FailureResponser("参数有误", controllers.ERROR_CODE, nil)
+		this.FailureResponser("参数有误", common.ERROR_CODE, nil)
 	}
 
 	/*数据验证*/
 	errList := user.ParamValid()
 	if errList != nil {
-		this.FailureResponser("参数有误", controllers.ERROR_CODE, errList)
+		this.FailureResponser("参数有误", common.ERROR_CODE, errList)
 	}
 
 	isFind := user.FindByUNameAndPwd()
 	if !isFind {
-		this.FailureResponser("登陆失败", controllers.ERROR_CODE, nil)
+		this.FailureResponser("登陆失败", common.ERROR_CODE, nil)
 	}
 
 	/*生成JWT*/
@@ -35,7 +36,7 @@ func (this *LoginController) LoginIn() {
 	log.Println(tokenString)
 
 	if err != nil {
-		this.FailureResponser("登陆失败", controllers.ERROR_CODE, nil)
+		this.FailureResponser("登陆失败", common.ERROR_CODE, nil)
 		return
 	}
 

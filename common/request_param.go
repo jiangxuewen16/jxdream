@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/astaxie/beego/context"
-	"github.com/astaxie/beego"
+	//"github.com/astaxie/beego"
 )
 
 const (
