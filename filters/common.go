@@ -15,13 +15,16 @@ var HasPermission = func(ctx *context.Context) {
 
 /*验证登陆*/
 var HasLogin = func(ctx *context.Context) {
-	log.Println("JWT token:", string(ctx.Request.Header.Get("Authorization")))
+	match, _ := regexp.MatchString("^/user/login/", ctx.Request.RequestURI)
+
+	log.Println("JWT token:", ctx.Input.RequestBody)
+	//if(match && )
+	log.Println("JWT token:", string(ctx.Request.Header.Get("jwt")))
 
 	//common.SetParamDate(ctx, )
 	log.Println("requset uri :", ctx.Request.RequestURI)
 	log.Println("whether login :", "OK")
 	ok := true
-	match, _ := regexp.MatchString("^/user/login/", ctx.Request.RequestURI)
 	if !ok && !match {
 		ctx.Redirect(302, "/user/login/session/create")
 	}
