@@ -34,6 +34,7 @@ func (this *BaseController) Prepare() {
 	requesrParam := &common.RequestParam{}
 	this.SetParamDate(requesrParam)
 
+	//检验该url是否要检验jwt
 	urlStr := beego.AppConfig.String("notCheckLoginUrl")
 	if urls := strings.Split(urlStr, ","); len(urls) > 0 {
 		if libs.StringArrayHasElement(urls, this.BaseUrl) {
