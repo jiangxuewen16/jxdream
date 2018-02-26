@@ -37,9 +37,24 @@ type ResponseParam struct {
 }
 
 //构建返回数据
-func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (RequestParam, error) {
-	requestParam := RequestParam{}
+func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (ResponseParam, error) {
+	resposeParam := ResponseParam{}
 	header, err := buildHeader(jwtClaims, message, code)
+
+	if err != nil {
+		return resposeParam, nil
+	}
+
+	resposeParam.Header = &header
+	resposeParam.Data = data
+
+	return resposeParam, nil
+}
+
+//构建默认请求数据
+func BuildRequest(jwtClaims libs.JWTClaims) (RequestParam, error) {
+	requestParam := RequestParam{}
+	header, err := buildHeader(jwtClaims, "", code)
 
 	if err != nil {
 		return requestParam, nil

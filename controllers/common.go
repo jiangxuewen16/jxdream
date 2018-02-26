@@ -53,8 +53,9 @@ func (this *BaseController) Prepare() {
 	this.UserName, _ = mapClaims["userName"].(string)
 	this.NickName, _ = mapClaims["nickName"].(string)
 	this.Avatar, _ = mapClaims["avatar"].(string)
+	this.IsLogin,_ = mapClaims["isLogin"].(bool)
 
-	this.jwtClaims = libs.JWTClaims{this.UserId, this.UserName, this.NickName, this.Avatar}
+	this.jwtClaims = libs.JWTClaims{this.UserId, this.UserName, this.NickName, this.Avatar, this.IsLogin}
 
 }
 

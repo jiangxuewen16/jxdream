@@ -12,6 +12,7 @@ type JWTClaims struct {
 	UserName string
 	NickName string
 	Avatar   string
+	IsLogin  bool
 }
 
 type JWTToken struct {
