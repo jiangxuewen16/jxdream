@@ -34,6 +34,13 @@ func (this *BaseController) Prepare() {
 	requesrParam := &common.RequestParam{}
 	this.SetParamDate(requesrParam)
 
+	urlStr := beego.AppConfig.String("notCheckLoginUrl")
+	if urls := strings.Split(urlStr, ","); len(urls) > 0 {
+		if libs.StringArrayHasElement(urls, this.BaseUrl) {
+			return
+		}
+	}
+
 	jwtToken := requesrParam.Header.JWT
 	mapClaims, err := libs.GetClaims(jwtToken)
 	if err != nil {
