@@ -22,7 +22,7 @@ type User struct {
 }
 
 //数据验证
-func (user *User) ParamValid() (error map[string][]*validation.Error) {
+func (user *User) ParamValid() (error map[string]*validation.Error) {
 	valid := validation.Validation{}
 	b, err := valid.Valid(user)
 	if err != nil {

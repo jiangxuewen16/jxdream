@@ -5,8 +5,6 @@ import (
 	"github.com/astaxie/beego/context"
 	"log"
 	"regexp"
-	//"jxdream/libs"
-	//"jxdream/common"
 )
 
 var HasPermission = func(ctx *context.Context) {
@@ -15,9 +13,11 @@ var HasPermission = func(ctx *context.Context) {
 
 /*验证登陆*/
 var HasLogin = func(ctx *context.Context) {
+	log.Println("requset uri :", ctx.Request.RequestURI)
+	log.Println("request data:", string(ctx.Input.RequestBody))
+
 	match, _ := regexp.MatchString("^/user/login/", ctx.Request.RequestURI)
 
-	log.Println("JWT token:", ctx.Input.RequestBody)
 	//if(match && )
 	log.Println("JWT token:", string(ctx.Request.Header.Get("jwt")))
 
