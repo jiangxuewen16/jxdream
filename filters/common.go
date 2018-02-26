@@ -15,13 +15,13 @@ var HasPermission = func(ctx *context.Context) {
 var HasLogin = func(ctx *context.Context) {
 	log.Println("requset uri :", ctx.Request.RequestURI)
 	log.Println("request data:", string(ctx.Input.RequestBody))
+	requestBody := string(ctx.Input.RequestBody)
+	if requestBody == "" {
+
+	}
 
 	match, _ := regexp.MatchString("^/user/login/", ctx.Request.RequestURI)
 
-	//if(match && )
-	log.Println("JWT token:", string(ctx.Request.Header.Get("jwt")))
-
-	//common.SetParamDate(ctx, )
 	log.Println("requset uri :", ctx.Request.RequestURI)
 	log.Println("whether login :", "OK")
 	ok := true
