@@ -58,18 +58,20 @@ func ValidJWT(token string) (*jwt.Token, error) {
 		return SecretKey, nil
 	})
 
-	CheckError(err)
-
-	return t, nil
+	return t, err
 }
 
 func GetClaims(token string) (map[string]interface{}, error) {
-	t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
+	t, err := ValidJWT(token)
+	/*t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
 		return SecretKey, nil
 	})
 
-	CheckError(err)
-	mapClaims := t.Claims.(jwt.MapClaims)
+	CheckError(err)*/
+	if err != nil {
+		return nil, err
+	}
 
+	mapClaims := t.Claims.(jwt.MapClaims)
 	return mapClaims, nil
 }

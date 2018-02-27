@@ -5,9 +5,12 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"log"
 )
 
 func main() {
+	log.SetFlags(log.Lshortfile | log.LstdFlags)		//日志
+
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		orm.Debug = true

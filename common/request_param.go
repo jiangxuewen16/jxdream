@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/astaxie/beego/context"
 	//"github.com/astaxie/beego"
+	"log"
 )
 
 const (
@@ -36,6 +37,14 @@ type ResponseParam struct {
 	Data   interface{} `json:"data"`
 }
 
+func (r *RequestParam) ToString() string {
+	RByte,err := json.Marshal(r)
+	if err != nil {
+		return ""
+	}
+	return string(RByte)
+}
+
 //构建返回数据
 func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (ResponseParam, error) {
 	resposeParam := ResponseParam{}
@@ -51,10 +60,10 @@ func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, co
 	return resposeParam, nil
 }
 
-//构建默认请求数据
-func BuildRequest(jwtClaims libs.JWTClaims) (RequestParam, error) {
+//构建请求数据
+func BuildRequest(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (RequestParam, error) {
 	requestParam := RequestParam{}
-	header, err := buildHeader(jwtClaims, "", code)
+	header, err := buildHeader(jwtClaims, message, code)
 
 	if err != nil {
 		return requestParam, nil
@@ -62,6 +71,20 @@ func BuildRequest(jwtClaims libs.JWTClaims) (RequestParam, error) {
 
 	requestParam.Header = &header
 	requestParam.Data = data
+
+	return requestParam, nil
+}
+
+//构建默认请求数据
+func BuildDefaultRequest() (requestParam RequestParam, err error) {
+	jwtClaims := libs.JWTClaims{IsLogin:false}
+	message := "未验证权限"
+	code := 0
+
+	requestParam, err = BuildRequest(jwtClaims,"", message, code)
+	if err != nil {
+		log.Fatal("jwt 生成失败")
+	}
 
 	return requestParam, nil
 }
