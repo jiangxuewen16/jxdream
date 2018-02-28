@@ -42,8 +42,9 @@ func BuildJWT(jwtClaims JWTClaims) (tokenString string, err error) {
 
 //构建claims参数
 func buildClaims(jwtClaims JWTClaims) jwt.MapClaims {
+	expireTime,_ := beego.AppConfig.Int("Expire")		//获取配置的超时时间
 	claims := make(jwt.MapClaims)
-	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
+	claims["exp"] = time.Now().Add(time.Second * time.Duration(expireTime)).Unix()
 	claims["iat"] = time.Now().Unix()
 	claims["userId"] = jwtClaims.UserId
 	claims["userName"] = jwtClaims.UserName
@@ -55,7 +56,7 @@ func buildClaims(jwtClaims JWTClaims) jwt.MapClaims {
 //验证jwt token
 func ValidJWT(token string) (*jwt.Token, error) {
 	t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return SecretKey, nil
+		return []byte(SecretKey), nil
 	})
 
 	return t, err

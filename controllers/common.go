@@ -81,8 +81,10 @@ func (this *BaseController) GetContentType() string {
 
 /*绑定请求参数到结构体*/
 func (this *BaseController) SetParamDate(struc interface{}) error {
-	common.SetParamDate(this.Ctx, struc)
-	this.ParseForm(struc)
+	requestParam := new(common.RequestParam)
+	common.SetParamDate(this.Ctx, requestParam)
+	//this.ParseForm(requestParam.Data)
+	struc = requestParam.Data
 	return nil
 }
 
@@ -90,10 +92,7 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 func (this *BaseController) Responser(data interface{}, message string, code int) {
 	jwtClaims := this.jwtClaims
 	response, err := common.BuildRespose(jwtClaims, data, message, code)
-	if err != nil {
-		log.Println("Responser error:", err)
-		this.StopRun()
-	}
+	libs.CheckError(err)
 
 	this.Data["json"] = response
 	this.ServeJSON()

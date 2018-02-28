@@ -29,7 +29,8 @@ type Header struct {
 
 type RequestParam struct {
 	Header *Header     `json:"header"`
-	Data   interface{} `json:"data"`
+	Data   string `json:"data"`
+	//Data   user.User `json:"data"`
 }
 
 type ResponseParam struct {
@@ -61,7 +62,7 @@ func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, co
 }
 
 //构建请求数据
-func BuildRequest(jwtClaims libs.JWTClaims, data interface{}, message string, code int) (RequestParam, error) {
+func BuildRequest(jwtClaims libs.JWTClaims, data string, message string, code int) (RequestParam, error) {
 	requestParam := RequestParam{}
 	header, err := buildHeader(jwtClaims, message, code)
 

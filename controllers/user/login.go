@@ -14,12 +14,11 @@ type LoginController struct {
 func (this *LoginController) LoginIn() {
 	user := user.User{}
 	if err := this.SetParamDate(&user); err != nil {
-		this.FailureResponser("参数有误", common.ERROR_CODE, nil)
+		this.FailureResponser("参数绑定错误，请检查您的参数", common.ERROR_CODE, nil)
 	}
 
 	/*数据验证*/
-	errList := user.ParamValid()
-	if errList != nil {
+	if errList := user.ParamValid(); errList != nil {
 		this.FailureResponser("参数有误", common.ERROR_CODE, errList)
 	}
 
