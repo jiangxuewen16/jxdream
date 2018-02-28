@@ -26,18 +26,15 @@ var HasLogin = func(ctx *context.Context) {
 		requestParam,_ := common.BuildDefaultRequest()
 		requestParamStr,err := json.Marshal(requestParam)
 		if err != nil {
-			//log.Fatal("json 解析失败")
-			//log.Println("json 解析失败")
 			libs.CheckError(err)
 		}
 		ctx.Input.RequestBody = requestParamStr
 	} else {
+
 		requestParam := new(common.RequestParam)
 		err := json.Unmarshal(requestBody,requestParam)
 		mapClaims, err :=libs.GetClaims(requestParam.Header.JWT)
 		if err != nil {
-			//log.Fatal("json 解析失败")
-			//log.Println("jwt 验证失败")
 			libs.CheckError(err)
 		}
 		isLogin,_ = mapClaims["isLogin"].(bool)

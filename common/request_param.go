@@ -28,8 +28,8 @@ type Header struct {
 }
 
 type RequestParam struct {
-	Header *Header     `json:"header"`
-	Data   string `json:"data"`
+	Header *Header                `json:"header"`
+	Data   map[string]interface{} `json:"data"`
 	//Data   user.User `json:"data"`
 }
 
@@ -39,7 +39,7 @@ type ResponseParam struct {
 }
 
 func (r *RequestParam) ToString() string {
-	RByte,err := json.Marshal(r)
+	RByte, err := json.Marshal(r)
 	if err != nil {
 		return ""
 	}
@@ -62,7 +62,7 @@ func BuildRespose(jwtClaims libs.JWTClaims, data interface{}, message string, co
 }
 
 //构建请求数据
-func BuildRequest(jwtClaims libs.JWTClaims, data string, message string, code int) (RequestParam, error) {
+func BuildRequest(jwtClaims libs.JWTClaims, data map[string]interface{}, message string, code int) (RequestParam, error) {
 	requestParam := RequestParam{}
 	header, err := buildHeader(jwtClaims, message, code)
 
@@ -78,11 +78,11 @@ func BuildRequest(jwtClaims libs.JWTClaims, data string, message string, code in
 
 //构建默认请求数据
 func BuildDefaultRequest() (requestParam RequestParam, err error) {
-	jwtClaims := libs.JWTClaims{IsLogin:false}
+	jwtClaims := libs.JWTClaims{IsLogin: false}
 	message := "未验证权限"
 	code := 0
 
-	requestParam, err = BuildRequest(jwtClaims,"", message, code)
+	requestParam, err = BuildRequest(jwtClaims, nil, message, code)
 	if err != nil {
 		log.Fatal("jwt 生成失败")
 	}
