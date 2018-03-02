@@ -28,9 +28,8 @@ type Header struct {
 }
 
 type RequestParam struct {
-	Header *Header                `json:"header"`
+	Header *Header     `json:"header"`
 	Data   interface{} `json:"data"`
-	//Data   user.User `json:"data"`
 }
 
 type ResponseParam struct {

@@ -30,7 +30,6 @@ var HasLogin = func(ctx *context.Context) {
 		}
 		ctx.Input.RequestBody = requestParamStr
 	} else {
-
 		requestParam := new(common.RequestParam)
 		err := json.Unmarshal(requestBody,requestParam)
 		mapClaims, err :=libs.GetClaims(requestParam.Header.JWT)
@@ -42,10 +41,11 @@ var HasLogin = func(ctx *context.Context) {
 
 	log.Println("whether login :", isLogin)
 
-	match, _ := regexp.MatchString("^/user/login/", ctx.Request.RequestURI)
-
+	//登录页面
+	loginUrl := beego.AppConfig.String("LoginUrl")
+	match, _ := regexp.MatchString("^" + loginUrl, ctx.Request.RequestURI)
 	if !isLogin && !match {
-		ctx.Redirect(302, "/user/login/session/create")
+
 	}
 }
 

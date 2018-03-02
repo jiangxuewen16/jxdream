@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"encoding/json"
 )
 
 type BaseController struct {
@@ -31,18 +32,17 @@ func (this *BaseController) Prepare() {
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.BaseUrl = this.Ctx.Request.URL.String()
 
-	requesrParam := &common.RequestParam{}
-	this.SetParamDate(requesrParam)
+	headerParam := this.GetHeaderParam()
 
 	//检验该url是否要检验jwt  todo:不需要检验是否要验证登录
-	urlStr := beego.AppConfig.String("notCheckLoginUrl")
+	/*urlStr := beego.AppConfig.String("notCheckLoginUrl")
 	if urls := strings.Split(urlStr, ","); len(urls) > 0 {
 		if libs.StringArrayHasElement(urls, this.BaseUrl) {
 			return
 		}
-	}
+	}*/
 
-	jwtToken := requesrParam.Header.JWT
+	jwtToken := headerParam.JWT
 	mapClaims, err := libs.GetClaims(jwtToken)
 	if err != nil {
 		log.Println("error:", err)
@@ -79,15 +79,20 @@ func (this *BaseController) GetContentType() string {
 	return this.GetHeader().Get("Content-Type")
 }
 
-/*绑定请求参数到结构体*/
-func (this *BaseController) SetParamDate(struc interface{}) error {
+/*获取data数据，并绑定结构体*/
+func (this *BaseController) GetDataParam(struc interface{}) error {
 	requestParam := new(common.RequestParam)
 	common.SetParamDate(this.Ctx, requestParam)
-	//this.ParseForm(requestParam.Data)
-	struc = requestParam.Data
-	//log.Println(reflect.TypeOf(struc).String(),":",struc)
-	//libs.Map2Struct(requestParam.Data,struc)
+	info,_ := json.Marshal(requestParam.Data)
+	json.Unmarshal(info, struc)
 	return nil
+}
+
+//获取header数据
+func (this *BaseController) GetHeaderParam() *common.Header {
+	requestParam := &common.RequestParam{}
+	common.SetParamDate(this.Ctx, requestParam)
+	return requestParam.Header
 }
 
 //返回数据
@@ -108,18 +113,3 @@ func (this *BaseController) SuccessResponser(message string, data interface{}) {
 func (this *BaseController) FailureResponser(message string, code int, data interface{}) {
 	this.Responser(data, message, code)
 }
-
-//获取请求data参数
-func (this *BaseController) GetRequstData() interface{} {
-	requestParam := &common.RequestParam{}
-	this.SetParamDate(requestParam)
-	return requestParam.Data
-}
-
-//错误panic
-//todo:抛错，应该在一个错误页面
-/*
-func (this *BaseController) ()  {
-
-}
-*/

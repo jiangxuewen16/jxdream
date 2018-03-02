@@ -13,7 +13,7 @@ type LoginController struct {
 // @router /session/create [post]
 func (this *LoginController) LoginIn() {
 	user := user.User{}
-	if err := this.SetParamDate(&user); err != nil {
+	if err := this.GetDataParam(&user); err != nil {
 		this.FailureResponser("参数绑定错误，请检查您的参数", common.ERROR_CODE, nil)
 	}
 
