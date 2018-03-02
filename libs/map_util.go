@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-//import "reflect"
-
 //todo:这里通过反射来做
 func Map2Struct(maps map[interface{}]interface{}, obj interface{}) {
 	t := reflect.TypeOf(obj)

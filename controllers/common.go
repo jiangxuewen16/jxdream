@@ -34,7 +34,7 @@ func (this *BaseController) Prepare() {
 	requesrParam := &common.RequestParam{}
 	this.SetParamDate(requesrParam)
 
-	//检验该url是否要检验jwt
+	//检验该url是否要检验jwt  todo:不需要检验是否要验证登录
 	urlStr := beego.AppConfig.String("notCheckLoginUrl")
 	if urls := strings.Split(urlStr, ","); len(urls) > 0 {
 		if libs.StringArrayHasElement(urls, this.BaseUrl) {
@@ -85,6 +85,8 @@ func (this *BaseController) SetParamDate(struc interface{}) error {
 	common.SetParamDate(this.Ctx, requestParam)
 	//this.ParseForm(requestParam.Data)
 	struc = requestParam.Data
+	//log.Println(reflect.TypeOf(struc).String(),":",struc)
+	//libs.Map2Struct(requestParam.Data,struc)
 	return nil
 }
 
