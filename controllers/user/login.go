@@ -37,7 +37,7 @@ func (this *LoginController) LoginIn() {
 		return
 	}*/
 
-	this.IsLogin = true
+	this.SetUserBaseInfo(&user)
 	this.SuccessResponser("登陆成功", nil)
 }
 

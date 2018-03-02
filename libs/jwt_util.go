@@ -10,6 +10,7 @@ import (
 type JWTClaims struct {
 	UserId   int
 	UserName string
+	UserType int
 	NickName string
 	Avatar   string
 	IsLogin  bool
@@ -50,6 +51,7 @@ func buildClaims(jwtClaims JWTClaims) jwt.MapClaims {
 	claims["userName"] = jwtClaims.UserName
 	claims["nickName"] = jwtClaims.NickName
 	claims["avatar"] = jwtClaims.Avatar
+	claims["userType"] = jwtClaims.UserType
 	return claims
 }
 
@@ -62,13 +64,9 @@ func ValidJWT(token string) (*jwt.Token, error) {
 	return t, err
 }
 
+//获取token信息
 func GetClaims(token string) (map[string]interface{}, error) {
 	t, err := ValidJWT(token)
-	/*t, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-		return SecretKey, nil
-	})
-
-	CheckError(err)*/
 	if err != nil {
 		return nil, err
 	}

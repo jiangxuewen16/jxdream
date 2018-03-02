@@ -45,7 +45,12 @@ var HasLogin = func(ctx *context.Context) {
 	loginUrl := beego.AppConfig.String("LoginUrl")
 	match, _ := regexp.MatchString("^" + loginUrl, ctx.Request.RequestURI)
 	if !isLogin && !match {
-
+		requestParam,_ := common.BuildDefaultRequest()
+		requestParamStr,err := json.Marshal(requestParam)
+		if err != nil {
+			libs.CheckError(err)
+		}
+		ctx.Input.RequestBody = requestParamStr
 	}
 }
 
