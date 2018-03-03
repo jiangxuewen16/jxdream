@@ -22,14 +22,7 @@ var HasLogin = func(ctx *context.Context) {
 	isLogin := false		//默认未登陆
 
 	//如果没有请求参数，构建一个默认请求参数
-	if string(requestBody) == "" {
-		requestParam,_ := common.BuildDefaultRequest()
-		requestParamStr,err := json.Marshal(requestParam)
-		if err != nil {
-			libs.CheckError(err)
-		}
-		ctx.Input.RequestBody = requestParamStr
-	} else {
+	if string(requestBody) != "" {
 		requestParam := new(common.RequestParam)
 		err := json.Unmarshal(requestBody,requestParam)
 		mapClaims, err :=libs.GetClaims(requestParam.Header.JWT)
@@ -45,7 +38,7 @@ var HasLogin = func(ctx *context.Context) {
 	loginUrl := beego.AppConfig.String("LoginUrl")
 	match, _ := regexp.MatchString("^" + loginUrl, ctx.Request.RequestURI)
 	if !isLogin && !match {
-		requestParam,_ := common.BuildDefaultRequest()
+		requestParam,_ := common.BuildDefaultRequest(11)
 		requestParamStr,err := json.Marshal(requestParam)
 		if err != nil {
 			libs.CheckError(err)
