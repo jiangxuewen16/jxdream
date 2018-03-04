@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego/context"
 	//"github.com/astaxie/beego"
 	"log"
+	"github.com/astaxie/beego"
 )
 
 const (
@@ -21,10 +22,12 @@ const (
 )
 
 type Header struct {
-	JWT     string `json:"jwt"`
-	Time    int64  `json:"time"`
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	JWT     string                 `json:"jwt"`
+	Version string                 `json:"version"` //内部版本号
+	Time    int64                  `json:"time"`    //请求时间或者返回时间
+	Code    int                    `json:"code"`    //业务自定义状态码
+	Message string                 `json:"message"` //消息
+	Extra   map[string]interface{} `json:"extra"`   //扩展参数
 }
 
 type RequestParam struct {
@@ -96,7 +99,7 @@ func buildHeader(jwtClaims libs.JWTClaims, message string, code int) (Header, er
 		return Header{}, err
 	}
 
-	header := Header{tokenString, time.Now().Unix(), code, message}
+	header := Header{tokenString,beego.AppConfig.String("version"), time.Now().Unix(), code, message, nil}
 	return header, nil
 }
 
