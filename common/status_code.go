@@ -13,9 +13,9 @@ const (
 )
 
 var status_msg = map[int]string{
-	STATUS_OK : "OK",
+	STATUS_OK: "OK",
 
-	USER_NOT_LOGIN : "Not Login",
+	USER_NOT_LOGIN: "Not Login",
 
-	USER_NOT_PERMISSION : "Not Have Permission",
+	USER_NOT_PERMISSION: "Not Have Permission",
 }
