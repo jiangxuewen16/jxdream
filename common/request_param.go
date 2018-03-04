@@ -82,6 +82,7 @@ func BuildRequest(jwtClaims libs.JWTClaims, data interface{}, message string, co
 func BuildDefaultRequest(code int) (requestParam RequestParam, err error) {
 	jwtClaims := libs.JWTClaims{IsLogin: false}
 	message := "未验证权限"
+	log.Println(StatusMsg[1010])
 
 	requestParam, err = BuildRequest(jwtClaims, nil, message, code)
 	if err != nil {

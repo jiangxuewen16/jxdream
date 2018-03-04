@@ -1,18 +1,27 @@
 package common
 
-//请求成功失败code
+
 const (
-	ERROR_CODE   = 0
-	SUCCESS_CODE = 1
+
+	STATUS_ERROR = 100
 
 	STATUS_OK = 200
 
-	USER_NOT_LOGIN = 1010
+	REQUEST_PARAMETER_ERROR = 1010
+	REQUEST_PARAMETER_BIND_ERROR = 1011
+	REQUEST_PARAMETER_VALID_ERROR = 1012
 
-	USER_NOT_PERMISSION = 1020
+	REQUEST_NOT_HAS_HEADER = 1013
+
+	//用户
+	USER_NOT_LOGIN = 2010
+	USER_LOGIN_FIALD = 2011
+	USER_NOT_PERMISSION = 2020
 )
 
-var status_msg = map[int]string{
+var StatusMsg = map[int]string{
+	STATUS_ERROR: "Other Error",
+
 	STATUS_OK: "OK",
 
 	USER_NOT_LOGIN: "Not Login",

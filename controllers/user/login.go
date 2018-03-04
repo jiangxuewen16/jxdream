@@ -14,17 +14,18 @@ type LoginController struct {
 func (this *LoginController) LoginIn() {
 	user := user.User{}
 	if err := this.GetDataParam(&user); err != nil {
-		this.FailureResponser("参数绑定错误，请检查您的参数", common.ERROR_CODE, nil)
+		this.FailureResponser("参数绑定错误，请检查您的参数", common.REQUEST_PARAMETER_BIND_ERROR, nil)
 	}
+
 
 	/*数据验证*/
 	if errList := user.ParamValid(); errList != nil {
-		this.FailureResponser("参数有误", common.ERROR_CODE, errList)
+		this.FailureResponser("参数有误", common.REQUEST_PARAMETER_VALID_ERROR, errList)
 	}
 
 	isFind := user.FindByUNameAndPwd()
 	if !isFind {
-		this.FailureResponser("登陆失败", common.ERROR_CODE, nil)
+		this.FailureResponser("登陆失败", common.USER_LOGIN_FIALD, nil)
 	}
 
 	/*生成JWT*/
