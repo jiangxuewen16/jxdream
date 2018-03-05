@@ -5,7 +5,6 @@ import (
 	"jxdream/common"
 	"jxdream/libs"
 	"jxdream/models/user"
-	"log"
 	"net/http"
 	"strings"
 	"encoding/json"
@@ -28,7 +27,10 @@ func (this *BaseController) Prepare() {
 	this.Data["version"] = beego.AppConfig.String("version")
 	this.BaseUrl = this.Ctx.Request.URL.String()
 
-	headerParam := this.GetHeaderParam()
+	headerParam, err := this.GetHeaderParam()
+	if err != nil {
+		libs.CheckError(err)
+	}
 
 	//检验该url是否要检验jwt  todo:不需要检验是否要验证登录，这个可以放到拦截器去
 	/*urlStr := beego.AppConfig.String("notCheckLoginUrl")
@@ -41,15 +43,16 @@ func (this *BaseController) Prepare() {
 	jwtToken := headerParam.JWT
 	jwtClaims, err := libs.GetClaims(jwtToken)
 	if err != nil {
-		log.Println("error:", err)
-		this.StopRun()
+		libs.CheckError(err)
 	}
 
 	libs.BuildJWT(jwtClaims)
-
 	if !jwtClaims.IsLogin {
-		response := json.Unmarshal()
-		this.Data["json"] = response
+		resonseParam := &common.ResponseParam{}
+		err := common.SetParamDate(this.Ctx, resonseParam)
+		libs.CheckError(err)
+
+		this.Data["json"] = resonseParam
 		this.ServeJSON()
 		this.StopRun()
 	}
@@ -66,10 +69,12 @@ func (this *BaseController) Prepare() {
 }
 
 //重定向（web）
+/*
 func (this *BaseController) Redirectd(url string) {
 	this.Redirect(url, 302)
 	this.StopRun()
 }
+*/
 
 /*是否是post提交*/
 func (this *BaseController) IsPost() bool {
@@ -86,22 +91,39 @@ func (this *BaseController) GetContentType() string {
 	return this.GetHeader().Get("Content-Type")
 }
 
-/*获取data数据，并绑定结构体*/
-func (this *BaseController) GetDataParam(struc interface{}) error {
+func (this *BaseController) GetRequestParam() (*common.RequestParam, error) {
 	requestParam := new(common.RequestParam)
 	err := common.SetParamDate(this.Ctx, requestParam)
-	libs.CheckError(err)
-	info, _ := json.Marshal(requestParam.Data)
-	json.Unmarshal(info, struc)
+	if err != nil {
+		return nil,err
+	}
+	return requestParam,nil
+}
+
+/*获取data数据，并绑定结构体*/
+func (this *BaseController) GetDataParam(struc interface{}) error {
+	requestParam, err := this.GetRequestParam()
+	if err != nil {
+		return err
+	}
+	info, err := json.Marshal(requestParam.Data)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(info, struc)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 //获取header数据
-func (this *BaseController) GetHeaderParam() *common.Header {
-	requestParam := &common.RequestParam{}
-	err := common.SetParamDate(this.Ctx, requestParam)
-	libs.CheckError(err)
-	return requestParam.Header
+func (this *BaseController) GetHeaderParam() (*common.Header, error) {
+	requestParam, err := this.GetRequestParam()
+	if err != nil {
+		return nil,err
+	}
+	return requestParam.Header, nil
 }
 
 //返回数据
