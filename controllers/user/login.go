@@ -28,16 +28,6 @@ func (this *LoginController) LoginIn() {
 		this.FailureResponser("登陆失败", common.USER_LOGIN_FIALD, nil)
 	}
 
-	/*生成JWT*/
-	/*JWTClaims := libs.JWTClaims{user.Id, user.Username, user.Nickname, user.Avatar, }
-	tokenString, err := libs.BuildJWT(JWTClaims)
-	log.Println(tokenString)
-
-	if err != nil {
-		this.FailureResponser("登陆失败", common.ERROR_CODE, nil)
-		return
-	}*/
-
 	this.SetUserBaseInfo(&user)
 	this.SuccessResponser("登陆成功", nil)
 }

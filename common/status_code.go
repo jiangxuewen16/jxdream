@@ -17,6 +17,10 @@ const (
 	USER_NOT_LOGIN = 2010
 	USER_LOGIN_FIALD = 2011
 	USER_NOT_PERMISSION = 2020
+
+	//token
+	TOKEN_NOT_EXISTS = 1020
+	TOKEN_VALIDATION_FAILED = 1021
 )
 
 var StatusMsg = map[int]string{

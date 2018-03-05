@@ -14,7 +14,7 @@ import (
 type BaseController struct {
 	beego.Controller
 
-	UserBaseInfo       libs.JWTClaims //jwt基本信息
+	UserBaseInfo   libs.JWTClaims //jwt基本信息
 	ControllerName string
 	ActionName     string
 	User           *user.User
@@ -39,17 +39,27 @@ func (this *BaseController) Prepare() {
 	}*/
 
 	jwtToken := headerParam.JWT
-	mapClaims, err := libs.GetClaims(jwtToken)
+	jwtClaims, err := libs.GetClaims(jwtToken)
 	if err != nil {
 		log.Println("error:", err)
 		this.StopRun()
 	}
 
-	this.UserBaseInfo.UserId, _ = mapClaims["userId"].(int)
+	libs.BuildJWT(jwtClaims)
+
+	if !jwtClaims.IsLogin {
+		response := json.Unmarshal()
+		this.Data["json"] = response
+		this.ServeJSON()
+		this.StopRun()
+	}
+
+	this.UserBaseInfo = jwtClaims
+	/*this.UserBaseInfo.UserId, _ = mapClaims["userId"].(int)
 	this.UserBaseInfo.UserName, _ = mapClaims["userName"].(string)
 	this.UserBaseInfo.NickName, _ = mapClaims["nickName"].(string)
 	this.UserBaseInfo.Avatar, _ = mapClaims["avatar"].(string)
-	this.UserBaseInfo.IsLogin, _ = mapClaims["isLogin"].(bool)
+	this.UserBaseInfo.IsLogin, _ = mapClaims["isLogin"].(bool)*/
 
 	//this.jwtClaims = libs.JWTClaims{this.UserId, this.UserName, this.NickName, this.Avatar, this.IsLogin}
 
@@ -115,7 +125,7 @@ func (this *BaseController) FailureResponser(message string, code int, data inte
 	this.Responser(data, message, code)
 }
 
-func (this *BaseController) SetUserBaseInfo(user *user.User){
+func (this *BaseController) SetUserBaseInfo(user *user.User) {
 	this.UserBaseInfo.UserId = user.Id
 	this.UserBaseInfo.UserName = user.Username
 	this.UserBaseInfo.UserType = user.UserType

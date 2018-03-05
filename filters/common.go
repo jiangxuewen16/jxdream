@@ -25,11 +25,18 @@ var HasLogin = func(ctx *context.Context) {
 	if string(requestBody) != "" {
 		requestParam := new(common.RequestParam)
 		err := json.Unmarshal(requestBody,requestParam)
-		mapClaims, err :=libs.GetClaims(requestParam.Header.JWT)
+		jwtClaims, err :=libs.GetClaims(requestParam.Header.JWT)
 		if err != nil {
+			jwtClaims.IsLogin = false
+			requestParam, err := common.BuildRequest(jwtClaims,nil, "token 校验失败", common.TOKEN_VALIDATION_FAILED)
 			libs.CheckError(err)
+
+			requestByte,err := json.Marshal(requestParam)
+			libs.CheckError(err)
+
+			ctx.Input.RequestBody = requestByte
 		}
-		isLogin,_ = mapClaims["isLogin"].(bool)
+		isLogin = jwtClaims.IsLogin
 	}
 
 	log.Println("whether login :", isLogin)

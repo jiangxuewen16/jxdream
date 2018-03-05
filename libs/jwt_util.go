@@ -5,6 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"log"
 	"time"
+	"github.com/goinggo/mapstructure"
 )
 
 type JWTClaims struct {
@@ -28,17 +29,17 @@ func init() {
 }
 
 //生成jwt token
-func BuildJWT(jwtClaims JWTClaims) (tokenString string, err error) {
+func BuildJWT(jwtClaims JWTClaims) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := buildClaims(jwtClaims)
 	token.Claims = claims
 
-	tokenString, err = token.SignedString([]byte(SecretKey))
+	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
 		log.Println("生成JWT失败！")
-		return
+		return "",err
 	}
-	return
+	return tokenString,nil
 }
 
 //构建claims参数
@@ -65,12 +66,15 @@ func ValidJWT(token string) (*jwt.Token, error) {
 }
 
 //获取token信息
-func GetClaims(token string) (map[string]interface{}, error) {
+func GetClaims(token string) (JWTClaims, error) {
+	jwtClaims := JWTClaims{}
+
 	t, err := ValidJWT(token)
 	if err != nil {
-		return nil, err
+		return jwtClaims, err
 	}
 
 	mapClaims := t.Claims.(jwt.MapClaims)
-	return mapClaims, nil
+	mapstructure.Decode(mapClaims,&jwtClaims)
+	return jwtClaims, nil
 }
