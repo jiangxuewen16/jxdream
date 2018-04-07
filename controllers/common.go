@@ -47,7 +47,7 @@ func (this *BaseController) Prepare() {
 	}
 
 	libs.BuildJWT(jwtClaims)
-	if !jwtClaims.IsLogin {
+	/*if !jwtClaims.IsLogin {
 		resonseParam := &common.ResponseParam{}
 		err := common.SetParamDate(this.Ctx, resonseParam)
 		libs.CheckError(err)
@@ -55,7 +55,7 @@ func (this *BaseController) Prepare() {
 		this.Data["json"] = resonseParam
 		this.ServeJSON()
 		this.StopRun()
-	}
+	}*/
 
 	this.UserBaseInfo = jwtClaims
 	/*this.UserBaseInfo.UserId, _ = mapClaims["userId"].(int)
