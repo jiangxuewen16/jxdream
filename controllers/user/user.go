@@ -2,7 +2,8 @@ package user
 
 import (
 	"jxdream/controllers"
-	"log"
+	"fmt"
+	"jxdream/models"
 )
 
 type UserController struct {
@@ -11,6 +12,6 @@ type UserController struct {
 
 // @router /index [get]
 func (this *UserController) Index() {
-	log.Println("whether login :", this.UserBaseInfo.IsLogin, ";", "userId :", this.UserBaseInfo.UserId, ";", "userName :", this.UserBaseInfo.UserName)
-
+	a := models.Redis.Get("name").([]byte)
+	fmt.Println(string(a))
 }

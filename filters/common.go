@@ -17,6 +17,7 @@ var HasPermission = func(ctx *context.Context) {
 var HasLogin = func(ctx *context.Context) {
 	log.Println("requset uri :", ctx.Request.RequestURI)
 	log.Println("request data:", string(ctx.Input.RequestBody))
+
 	requestBody := ctx.Input.RequestBody
 
 	//如果没有请求参数，构建一个默认请求参数

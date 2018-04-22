@@ -4,6 +4,8 @@ import (
 	"jxdream/controllers"
 	"jxdream/models/user"
 	"jxdream/common"
+	"fmt"
+	"jxdream/models"
 )
 
 type LoginController struct {
@@ -17,6 +19,9 @@ func (this *LoginController) LoginIn() {
 		this.FailureResponser("参数绑定错误，请检查您的参数", common.REQUEST_PARAMETER_BIND_ERROR, nil)
 	}
 
+	a := models.Redis.Get("name")
+	models.Redis.Put("age",22,100)
+	fmt.Println(a)
 
 	/*数据验证*/
 	if errList := user.ParamValid(); errList != nil {

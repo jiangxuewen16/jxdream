@@ -8,7 +8,12 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"jxdream/models/user"
 	"time"
+	"github.com/astaxie/beego/cache"
+	_ "github.com/astaxie/beego/cache/redis"
+	"log"
 )
+
+var Redis cache.Cache
 
 func init() {
 	conString, err := getDBConf()
@@ -25,6 +30,11 @@ func init() {
 
 	if beego.AppConfig.String("runmode") == "dev" {
 		orm.Debug = true
+	}
+
+	Redis, err = cache.NewCache("redis",`{"conn":"118.126.105.239:6378", "key":"beecacheRedis", "dbNum":"0", "password":"jiangxuewen"}`)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
